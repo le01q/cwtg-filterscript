@@ -205,6 +205,13 @@ InicializarMundo()
 	Mundo[NumeroMundo] = 7284;
 }
 
+JugadorNombre(playerid)
+{
+	new nombre[MAX_PLAYER_NAME];
+	GetPlayerName(playerid, name, MAX_PLAYER_NAME);
+	return nombre;
+}
+
 MostrarMenuEquipos(playerid)
 {
 	new dialogo[48], tmp[72];
@@ -229,6 +236,13 @@ MostrarPartidasRealizadas()
 	// Por si acaso.
 }
 
+EnviarMensajeGlobal()
+{
+	IterarJugadores(i)
+	{
+		if (Jugador[i][EnJuego]) SendClientMessage(i, BLANCO, "[CW] El jugador %s se unió a la partida!", JugadorNombre(i));
+	}
+}
 
 // Comandos
 
@@ -238,6 +252,6 @@ CMD:equipo(playerid, params[]){
 
 CMD:cw(playerid, params[])
 {
-	// Se le asigna que entró a jugar por lo tanto...
 	Jugador[playerid][Jugando] = true;
+	EnviarMensajeGlobal();
 }
