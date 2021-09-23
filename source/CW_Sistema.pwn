@@ -15,6 +15,7 @@
 #include <a_samp>
 #include <zcmd>
 
+// Definición principal.
 #define NULO -1
 #define MAX_EQUIPOS 3
 #define MAX_JUGADORES 6
@@ -47,10 +48,15 @@
 #define ROJO 0xFF5353FF
 #define AMARILLO 0xFFFFBB00
 
+// Definición de dialogos
+#define D_MENU_EQUIPOS 0
+
 //  Definición de macros.
-#define For(% 0)                                      \
-	for (new % 0; % 0 <= jugadoresConectados; % 0 ++) \
-		if (IsPlayerConnected(% 0))
+#define IterarJugadores(%0) 						\
+	for (new %0; %0 <= jugadoresConectados; %0 ++) 	\
+		if (IsPlayerConnected(%0))
+
+#define IterarEquipos(%0) for (new %0; %0 < MAX_EQUIPOS; %0 ++)
 
 // Variables del jugador.
 enum DATOS_JUGADOR {
@@ -66,7 +72,7 @@ new Jugador[MAX_PLAYERS][DATOS_JUGADOR];
 enum DATOS_EQUIPO
 {
 	Nombre[MAX_NOMBRE_EQUIPO],
-	CantidadJugadores[MAX_JUGADORES],
+	CantidadJugadores,
 	Puntaje,
 	Rondas,
 	PuntajeTotal,
@@ -117,14 +123,14 @@ public OnFilterScriptInit()
 
 public OnGameModeInit()
 {
-	inicializarMundo();
-	inicializarEquipos();
+	InicializarMundo();
+	InicializarEquipos();
 	return 1;
 }
 
 public OnPlayerConnect(playerid)
 {
-	inicializarJugador(playerid);
+	InicializarJugador(playerid);
 	return 1;
 }
 
@@ -133,7 +139,24 @@ public OnPlayerDisconnect(playerid, reason)
 	return 1;
 }
 
-inicializarJugador(playerid)
+
+public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+{
+    switch(dialogid)
+    {
+		case D_MENU_EQUIPOS:
+		{
+			if(!response){
+			    return 1;
+			}else{
+
+			}
+		}
+	}
+	return 1;
+}
+
+InicializarJugador(playerid)
 {
 	Jugador[playerid][EquipoElegido] = NULO;
 	Jugador[playerid][Jugando] = false;
@@ -142,16 +165,15 @@ inicializarJugador(playerid)
 	Jugador[playerid][Muertes] = 0;
 }
 
-inicializarEquipos()
+InicializarEquipos()
 {
 
-	for (new i = 0; i < MAX_EQUIPOS; i++)
-	{
-		Equipo[i][CantidadJugadores] = 0;
+	IterarEquipos(i){
 		Equipo[i][Puntaje] = 0;
 		Equipo[i][Rondas] = 0;
 		Equipo[i][PuntajeTotal] = 0;
 		Equipo[i][RondasTotal] = 0;
+		Equipo[i][CantidadJugadores] = 0;
 	}
 
 	// Se establece los nombres de cada equipo.
@@ -160,7 +182,7 @@ inicializarEquipos()
 	format(Equipo[EQUIPO_ESPECTADOR][Nombre], MAX_NOMBRE_EQUIPO, "Espectador");
 }
 
-inicializarMundo()
+InicializarMundo()
 {
 	Mundo[EnJuego] = false;
 	Mundo[EnPausa] = false;
@@ -170,4 +192,24 @@ inicializarMundo()
 	Mundo[RondaMaxima] = RONDA_MAXIMA;
 	Mundo[RondaActual] = 0;
 	Mundo[Mapa] = AEROPUERTO_LS;
+}
+
+MostrarMenuEquipos(playerid)
+{
+	new dialogo[48], tmp[72];
+
+	strcat(dialogo, "Equipo\tJugadores\n");
+
+	IterarEquipos(i){
+		format(tmp, sizeof(tmp), "\n%s\t%d", Equipo[i][Nombre], Equipo[i][CantidadJugadores]);
+		strcat(dialogo, tmp);
+	}
+
+	return ShowPlayerDialog(playerid, D_MENU_EQUIPOS, DIALOG_STYLE_TABLIST_HEADERS, "Seleccion de Equipos", dialogo, ">>", "X");
+}
+
+// Comandos
+
+CMD:equipo(playerid, params[]){
+	return MostrarMenuEquipos(playerid);
 }
