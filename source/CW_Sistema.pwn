@@ -15,20 +15,30 @@
 #include <a_samp>
 #include <zcmd>
 
-#define NULO 0
-#define MAX_JUGADORES 6 // Cantidad m醲ima de jugadores en una partida.
+#define NULO -1
+#define MAX_EQUIPOS 3
+#define MAX_JUGADORES 6
+#define MAX_NOMBRE_EQUIPO 24
 
-// Definici髇 de equipos.
-#define EQUIPO_ROJO 1
-#define EQUIPO_AZUL 2
-#define EQUIPO_ESPECTADOR 3
+#define PUNTAJE_MAXIMO 15
+#define RONDA_MAXIMA 3
 
-// Definici髇 modos de juego.
-#define ENTRENAMIENTO 1
-#define POR_EQUIPO 2
-#define UNOVSUNO 3
+// Definici贸n de mapas.
+#define AEROPUERTO_LV 0
+#define AEROPUERTO_SF 1
+#define AEROPUERTO_LS 2
 
-// Definici髇 de colores.
+// Definici贸n de equipos.
+#define EQUIPO_ALPHA 0
+#define EQUIPO_BETA 1
+#define EQUIPO_ESPECTADOR 2
+
+// Definici贸n modos de juego.
+#define ENTRENAMIENTO 0
+#define POR_EQUIPO 1
+#define UNOVSUNO 2
+
+// Definici贸n de colores.
 #define BLANCO -1
 #define NEUTRO 0xC0C9C9C9
 #define GRIS 0x80808080
@@ -37,21 +47,47 @@
 #define ROJO 0xFF5353FF
 #define AMARILLO 0xFFFFBB00
 
-//  Definici髇 de macros.
+//  Definici贸n de macros.
 #define For(% 0)                                      \
 	for (new % 0; % 0 <= jugadoresConectados; % 0 ++) \
 		if (IsPlayerConnected(% 0))
 
 // Variables del jugador.
 enum DATOS_JUGADOR {
-	Equipo,
+	bool:Jugando,
+	EquipoElegido,
 	Asesinatos,
 	Muertes,
 	Float:Promedio
 };
 new Jugador[MAX_PLAYERS][DATOS_JUGADOR];
 
-// Posiciones de cada mapa.
+// Variables del equipo.
+enum DATOS_EQUIPO
+{
+	Nombre[MAX_NOMBRE_EQUIPO],
+	CantidadJugadores[MAX_JUGADORES],
+	Puntaje,
+	Rondas,
+	PuntajeTotal,
+	RondasTotal,
+};
+new Equipo[MAX_EQUIPOS][DATOS_EQUIPO];
+
+// Variables del mundo.
+enum DATOS_MUNDO {
+	bool:EnJuego,
+	bool:EnPausa,
+	bool:EquiposBloqueados,
+	TipoPartida,
+	PuntajeMaximo,
+	RondaMaxima,
+	RondaActual,
+	Mapa,
+};
+new Mundo[DATOS_MUNDO];
+
+/* Posiciones de cada mapa.
 new const Float:posicionMapa[7][4][4] =
 					  {
 						  {// Aeropuerto LV
@@ -69,92 +105,69 @@ new const Float:posicionMapa[7][4][4] =
 						   {2071.0554, -2284.8943, 13.5469, 84.4657},
 						   {1865.7639, -2299.0803, 13.5469, 288.4241},
 						   {1921.2411, -2209.7275, 29.3730}}};
+*/
 
-#if defined FILTERSCRIPT
-
-public
-OnFilterScriptInit()
+public OnFilterScriptInit()
 {
 	print("\n> Sistema Clan-War cargado correctamente.\n");
 	return 1;
 }
 
-public
-OnFilterScriptExit()
+// Callbacks
+
+public OnGameModeInit()
+{
+	inicializarMundo();
+	inicializarEquipos();
+	return 1;
+}
+
+public OnPlayerConnect(playerid)
+{
+	inicializarJugador(playerid);
+	return 1;
+}
+
+public OnPlayerDisconnect(playerid, reason)
 {
 	return 1;
 }
 
-#else
-
-main()
+inicializarJugador(playerid)
 {
+	Jugador[playerid][EquipoElegido] = NULO;
+	Jugador[playerid][Jugando] = false;
+	Jugador[playerid][Promedio] = 0;
+	Jugador[playerid][Asesinatos] = 0;
+	Jugador[playerid][Muertes] = 0;
 }
 
-#endif
-
-public
-OnGameModeInit()
+inicializarEquipos()
 {
-	return 1;
+
+	for (new i = 0; i < MAX_EQUIPOS; i++)
+	{
+		Equipo[i][CantidadJugadores] = 0;
+		Equipo[i][Puntaje] = 0;
+		Equipo[i][Rondas] = 0;
+		Equipo[i][PuntajeTotal] = 0;
+		Equipo[i][RondasTotal] = 0;
+	}
+
+	// Se establece los nombres de cada equipo.
+	format(Equipo[EQUIPO_ALPHA][Nombre], MAX_NOMBRE_EQUIPO, "Alpha");
+	format(Equipo[EQUIPO_BETA][Nombre], MAX_NOMBRE_EQUIPO, "Beta");
+	format(Equipo[EQUIPO_ESPECTADOR][Nombre], MAX_NOMBRE_EQUIPO, "Espectador");
 }
 
-public
-OnGameModeExit()
+inicializarMundo()
 {
-	return 1;
-}
-
-public
-OnPlayerRequestClass(playerid, classid)
-{
-	return 1;
-}
-
-public
-OnPlayerConnect(playerid)
-{
-	return 1;
-}
-
-public
-OnPlayerDisconnect(playerid, reason)
-{
-	return 1;
-}
-
-public
-OnPlayerSpawn(playerid)
-{
-	return 1;
-}
-
-public
-OnPlayerDeath(playerid, killerid, reason)
-{
-	return 1;
-}
-
-public
-OnPlayerCommandText(playerid, cmdtext[])
-{
-	return 0;
-}
-
-public
-OnPlayerUpdate(playerid)
-{
-	return 1;
-}
-
-public
-OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
-{
-	return 1;
-}
-
-public
-OnPlayerClickPlayer(playerid, clickedplayerid, source)
-{
-	return 1;
+	Mundo[EnJuego] = false;
+	Mundo[EnPausa] = false;
+	Mundo[EquiposBloqueados] = false;
+	Mundo[TipoPartida] = ENTRENAMIENTO;
+	Mundo[PuntajeMaximo] = PUNTAJE_MAXIMO;
+	Mundo[RondaMaxima] = RONDA_MAXIMA;
+	Mundo[RondaActual] = 0;
+	Mundo[Mapa] = AEROPUERTO_LS;
 }
