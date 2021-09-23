@@ -21,7 +21,7 @@
 #define MAX_JUGADORES 6
 #define MAX_NOMBRE_EQUIPO 24
 
-#define PUNTAJE_MAXIMO 15
+#define PUNTAJE_MAXIMO 30
 #define RONDA_MAXIMA 3
 
 // Definición de mapas.
@@ -49,7 +49,16 @@
 #define AMARILLO 0xFFFFBB00
 
 // Definición de dialogos
+enum 
+{
+	D_MENU_EQUIPOS,
+	D_MODO_INFO,
+	D_CONFIGURAR
+}
+
 #define D_MENU_EQUIPOS 0
+#define D_MODO_INFO 1
+#define D_CONFIGURAR 2
 
 //  Definición de macros.
 #define IterarJugadores(%0) 						\
@@ -90,6 +99,7 @@ enum DATOS_MUNDO {
 	RondaMaxima,
 	RondaActual,
 	Mapa,
+	NumeroMundo
 };
 new Mundo[DATOS_MUNDO];
 
@@ -192,6 +202,7 @@ InicializarMundo()
 	Mundo[RondaMaxima] = RONDA_MAXIMA;
 	Mundo[RondaActual] = 0;
 	Mundo[Mapa] = AEROPUERTO_LS;
+	Mundo[NumeroMundo] = 7284;
 }
 
 MostrarMenuEquipos(playerid)
@@ -208,8 +219,25 @@ MostrarMenuEquipos(playerid)
 	return ShowPlayerDialog(playerid, D_MENU_EQUIPOS, DIALOG_STYLE_TABLIST_HEADERS, "Seleccion de Equipos", dialogo, ">>", "X");
 }
 
+MostrarConfiguracionPartida()
+{
+	// Proximamente
+}
+
+MostrarPartidasRealizadas()
+{
+	// Por si acaso.
+}
+
+
 // Comandos
 
 CMD:equipo(playerid, params[]){
 	return MostrarMenuEquipos(playerid);
+}
+
+CMD:cw(playerid, params[])
+{
+	// Se le asigna que entró a jugar por lo tanto...
+	Jugador[playerid][Jugando] = true;
 }
