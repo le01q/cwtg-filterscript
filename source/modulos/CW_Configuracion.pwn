@@ -6,18 +6,28 @@
 #define CW_CONFIGURACION
 
 // Configuración por defecto (PD)
+#define PD_MAPA AEROPUERTO_LV
+#define PD_TIPO_ARMA ARMAS_RAPIDAS
 #define PD_NUMERO_MUNDO 7284
 #define PD_PUNTAJE_MAXIMO 15
 #define PD_RONDA_MAXIMA 3
-#define PD_MAPA AEROPUERTO_LV
 
 #define PD_ALPHA_NOMBRE "Alpha"
 #define PD_BETA_NOMBRE "Beta"
 #define PD_ESPECTADOR_NOMBRE "Espectador"
 
+#define PD_SKIN_OBLIGATORIO true
+#define PD_ALPHA_SKIN 237
+#define PD_BETA_SKIN 130
+#define PD_ESPECTADOR_SKIN 10 
+
 #define PD_ALPHA_COLOR ROJO
 #define PD_BETA_COLOR AZUL
-#define PD_ESPECTADOR_COLOR NEUTRO
+#define PD_ESPECTADOR_COLOR CYAN
+
+// Refrescar posición (RP) para espectadores.
+#define RP_ESTADO true
+#define RP_TIEMPO 2000	// medida en milisegundos.
 
 // Definición global.
 #define NULO -1
@@ -30,6 +40,10 @@
 #define AEROPUERTO_LV 0
 #define AEROPUERTO_SF 1
 #define AEROPUERTO_LS 2
+
+// Definición de armas.
+#define ARMAS_RAPIDAS 0
+#define SOLO_RECORTADA 1
 
 // Definición de equipos.
 #define EQUIPO_ALPHA 0

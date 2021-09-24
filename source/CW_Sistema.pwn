@@ -21,6 +21,7 @@
 #tryinclude "modulos/CW_Funciones.pwn"
 #tryinclude "modulos/CW_Comandos.pwn"
 
+
 // Verifica si se incluyen los modulos.
 #if !defined CW_CONFIGURACION || !defined CW_UTILIDADES || !defined CW_DECLARACIONES || !defined CW_FUNCIONES || !defined CW_COMANDOS
 	#error Error a cargar uno de los modulos.
@@ -38,12 +39,65 @@ public OnGameModeInit()
 {
 	InicializarMundo();
 	InicializarEquipos();
+
+	#if RP_ESTADO
+		print("> Sistema Clan-War: refresco de posicion activado.");
+		SetTimer("RefrescarPosicion", RP_TIEMPO, true);
+	#endif
+
 	return 1;
+}
+
+#if RP_ESTADO
+forward RefrescarPosicion();
+public RefrescarPosicion()
+{
+    IterarJugadores(i) if (Jugador[i][EquipoElegido] == EQUIPO_ESPECTADOR)
+    {
+        new Float:x, Float:y, Float:z;
+        GetPlayerPos(i, x, y, z);
+		if (z < posicionMapa[Mundo[Mapa]][EQUIPO_ALPHA][2] + 5){
+            CallLocalFunction("ActualizarPosicionJugador", "i", i);
+			EnviarAdvertencia(i, "Si quieres jugar cambiate de equipo.");
+		}
+	}
+}
+#endif
+
+forward ActualizarPosicionJugador(playerid);
+public ActualizarPosicionJugador(playerid)
+{
+	new equipo = Jugador[playerid][EquipoElegido];
+	new Float:posicionCamara[3], Float:posicion[4];
+
+	// Establece las posiciones para el jugador.
+	ObtenerPosicionCamara(equipo, posicionCamara);
+	ObtenerPosicionEquipo(equipo, posicion);
+
+	// Establece el skin del equipo (si es que se encuentra activado)
+	if(Mundo[SkinObligatorio])
+		SetPlayerSkin(playerid, Equipo[equipo][Skin]);
+	
+	// Establece las armas al jugador dependiendo del tipo establecido
+	EstablecerArmasJugador(playerid);
+	
+	SetPlayerHealth(playerid, 100);
+	SetPlayerCameraPos(playerid, posicionCamara[0], posicionCamara[1], posicionCamara[2]);
+	SetPlayerPos(playerid, posicion[0], posicion[1], posicion[2]);
+	SetPlayerFacingAngle(playerid, posicion[3]);
 }
 
 public OnPlayerConnect(playerid)
 {
 	InicializarJugador(playerid);
+	return 1;
+}
+
+CMD:a(playerid, params[]){
+	new Float:angulo, tmp[26];
+	GetPlayerFacingAngle(playerid, angulo);
+	format(tmp, sizeof(tmp), "Angulo: %0.2f", angulo);
+	SendClientMessage(playerid, BLANCO, string);
 	return 1;
 }
 
@@ -58,7 +112,14 @@ public OnPlayerDisconnect(playerid, reason)
 public OnPlayerSpawn(playerid)
 {
 	if(Jugador[playerid][Jugando])	
-		ActualizarPosicionJugador(playerid);
+		CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
+	return 1;
+}
+
+public OnPlayerDeath(playerid)
+{
+	if(Jugador[playerid][Jugando])	
+		CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 	return 1;
 }
 
@@ -69,7 +130,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case D_MENU_EQUIPOS:
 		{
 			if(!response){
-			    return MostrarMenuEquipos(playerid);
+			    return 1;
 			}else{
 				switch(listitem){
 					case 0: return IntegrarEquipo(playerid, EQUIPO_ALPHA);

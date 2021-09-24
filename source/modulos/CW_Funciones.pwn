@@ -31,6 +31,11 @@ InicializarEquipos()
 	format(Equipo[EQUIPO_BETA][Nombre], MAX_NOMBRE_EQUIPO, PD_BETA_NOMBRE);
 	format(Equipo[EQUIPO_ESPECTADOR][Nombre], MAX_NOMBRE_EQUIPO, PD_ESPECTADOR_NOMBRE);
 
+	// Se establece los skins para cada equipo.
+	Equipo[EQUIPO_ALPHA][Skin] = PD_ALPHA_SKIN;
+	Equipo[EQUIPO_BETA][Skin] = PD_BETA_SKIN;
+	Equipo[EQUIPO_ESPECTADOR][Skin] = PD_ESPECTADOR_SKIN;
+
 	// Se establece los colores de cada equipo.
 	Equipo[EQUIPO_ALPHA][Color] = PD_ALPHA_COLOR;
 	Equipo[EQUIPO_BETA][Color] = PD_BETA_COLOR;
@@ -43,16 +48,18 @@ InicializarMundo()
 	Mundo[EnPausa] = false;
 	Mundo[EquiposBloqueados] = false;
 	Mundo[TipoPartida] = ENTRENAMIENTO;
+	Mundo[TipoArma] = PD_TIPO_ARMA;
 	Mundo[PuntajeMaximo] = PD_PUNTAJE_MAXIMO;
 	Mundo[RondaMaxima] = PD_RONDA_MAXIMA;
 	Mundo[RondaActual] = 0;
+	Mundo[SkinObligatorio] = PD_SKIN_OBLIGATORIO;
 	Mundo[Mapa] = AEROPUERTO_SF;
-	Mundo[Numero] = 7284;
+	Mundo[Numero] = PD_NUMERO_MUNDO;
 }
 
 ObtenerColorEquipo(numero)
 {
-	return Equipo[numero][Color] >>> 8;
+	return (Equipo[numero][Color] >>> 8 ) & 0xFFFFFF;
 }
 
 ObtenerColorJugador(playerid)
@@ -97,7 +104,7 @@ MostrarPartidasRealizadas()
 
 EnviarMensajeGlobal(mensaje[])
 {
-	IterarJugadores(i) if (Jugador[i][Jugando])
+	IterarJugadores(i)
 		SendClientMessage(i, BLANCO, mensaje);
 	return 1;
 }
@@ -105,13 +112,6 @@ EnviarMensajeGlobal(mensaje[])
 EnviarAdvertencia(playerid, mensaje[])
 {
 	return SendClientMessage(playerid, AMARILLO, mensaje);
-}
-
-
-ActualizarPosicionJugador(playerid)
-{
-	new equipo = Jugador[playerid][EquipoElegido];
-	SetPlayerPos(playerid, posicionMapa[Mundo[Mapa]][equipo][0], posicionMapa[Mundo[Mapa]][equipo][1], posicionMapa[Mundo[Mapa]][equipo][2]);
 }
 
 UnirJugador(playerid)
@@ -129,10 +129,10 @@ QuitarJugador(playerid)
 {
 	new mensaje[MAX_LONGITUD_MENSAJE];
 	Mundo[CantidadJugadores]--;
-	format(mensaje, sizeof(mensaje), "[CW] El jugador {%06x}%s se salió del mundo (%d jugadores)", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid), Mundo[CantidadJugadores]);
+	format(mensaje, sizeof(mensaje), "[CW] El jugador {%06x}%s {FFFFFF}se salió del mundo (%d jugadores)", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid), Mundo[CantidadJugadores]);
 	Jugador[playerid][Jugando] = false;
 	AbandonarEquipo(playerid, Jugador[playerid][EquipoElegido]);
-	ActualizarPosicionJugador(playerid);
+	CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 	SetPlayerColor(playerid, BLANCO);
 	return EnviarMensajeGlobal(mensaje);
 }
@@ -143,19 +143,19 @@ IntegrarEquipo(playerid, equipo)
 	new equipoActual = Jugador[playerid][EquipoElegido];
 
 	if (equipoActual == equipo)
-		return MostrarMenuEquipos(playerid);
+		return 1;
 
 	if (equipoActual != NULO)
 		AbandonarEquipo(playerid, equipoActual);
 
 	new tmp[MAX_LONGITUD_MENSAJE];
-	format(tmp, sizeof(tmp), "[CW] %s se integro al equipo %s", ObtenerNombreJugador(playerid), Equipo[equipo][Nombre]);
+	format(tmp, sizeof(tmp), "[CW] {%06x}%s {FFFFFF}se integro al equipo {%06x}%s", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid), ObtenerColorEquipo(equipo), Equipo[equipo][Nombre]);
 
 	Jugador[playerid][EquipoElegido] = equipo;
 	Equipo[equipo][CantidadJugadores]++;
 	SetPlayerColor(playerid, Equipo[equipo][Color]);
 
-	ActualizarPosicionJugador(playerid);
+	CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 
 	return EnviarMensajeGlobal(tmp);
 }
@@ -164,4 +164,28 @@ AbandonarEquipo(playerid, equipo)
 {
 	Equipo[equipo][CantidadJugadores]--;
 	Jugador[playerid][EquipoElegido] = NULO;
+}
+
+EstablecerArmasJugador(playerid)
+{
+	ResetPlayerWeapons(playerid);
+	if(Mundo[TipoArma] == ARMAS_RAPIDAS && Jugador[playerid][EquipoElegido] != EQUIPO_ESPECTADOR)
+		Iterar(i, 3)
+			GivePlayerWeapon(playerid, Armas[i], 9999);
+}
+
+ObtenerPosicionEquipo(equipo, Float:array[])
+{
+	Iterar(i, 4)
+		array[i] = posicionMapa[Mundo[Mapa]][equipo][i];
+}
+
+ObtenerPosicionCamara(equipo, Float:array[])
+{
+	if(equipo == EQUIPO_ESPECTADOR)
+		Iterar(i, 3)
+			array[i] = (posicionMapa[Mundo[Mapa]][EQUIPO_ALPHA][i] + posicionMapa[Mundo[Mapa]][EQUIPO_BETA][i]) / 2;
+	else
+		Iterar(i, 3)
+			array[i] = equipo == EQUIPO_ALPHA ? posicionMapa[Mundo[Mapa]][EQUIPO_BETA][i] : posicionMapa[Mundo[Mapa]][EQUIPO_ALPHA][i];
 }
