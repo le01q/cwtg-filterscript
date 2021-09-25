@@ -204,7 +204,7 @@ ObtenerEquipoContrario(equipo)
 	return equipo == EQUIPO_ALPHA ? EQUIPO_BETA : EQUIPO_ALPHA;
 }
 
-VerificarTeamKill(playerid, killerid)
+ActualizarEquipos(playerid, killerid)
 {
 	if (Mundo[EnJuego] == true)
 

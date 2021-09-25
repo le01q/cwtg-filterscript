@@ -120,6 +120,10 @@ public OnPlayerDeath(playerid)
 {
 	if(Jugador[playerid][Jugando])	
 		CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
+	
+	if (Mundo[EnJuego])
+		ActualizarEquipos(playerid, killerid);
+
 	return 1;
 }
 
