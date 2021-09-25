@@ -137,6 +137,15 @@ QuitarJugador(playerid)
 	return EnviarMensajeGlobal(mensaje);
 }
 
+ObtenerUnicoJugador(equipo)
+{
+	IterarJugadores(id)
+	{
+		if (Jugador[id][EquipoElegido] == equipo)
+			return id;
+	}
+	
+}
 
 IntegrarEquipo(playerid, equipo)
 {
@@ -188,4 +197,76 @@ ObtenerPosicionCamara(equipo, Float:array[])
 	else
 		Iterar(i, 3)
 			array[i] = equipo == EQUIPO_ALPHA ? posicionMapa[Mundo[Mapa]][EQUIPO_BETA][i] : posicionMapa[Mundo[Mapa]][EQUIPO_ALPHA][i];
+}
+
+ObtenerEquipoContrario(equipo)
+{
+	return equipo == EQUIPO_ALPHA ? EQUIPO_BETA : EQUIPO_ALPHA;
+}
+
+VerificarTeamKill(playerid, killerid)
+{
+	if (Mundo[EnJuego] == true)
+
+		new EquipoAsesino = Jugador[killerid][EquipoElegido];
+		new EquipoVictima = Jugador[playerid][EquipoElegido];
+
+		EquipoAsesino == EquipoVictima ? SumarPuntaje(ObtenerEquipoContrario(EquipoAsesino)) : SumarPuntaje(EquipoAsesino);
+}
+
+SumarPuntaje(numEquipo)
+{
+	Equipo[numEquipo][Puntaje]++;
+	Equipo[numEquipo][PuntajeTotal]++;
+	
+	if (Equipo[numEquipo][Puntaje] == Mundo[PuntajeMaximo])
+	{
+		SumarRondas();
+	}
+}
+
+SumarRondas(numEquipo)
+{
+	//...
+}
+
+VerificarGanadorPartida()
+{
+	new 
+		EquipoGana,
+		EquipoPierde;
+
+	if (Equipo[EQUIPO_ALPHA][Rondas] > Equipo[EQUIPO_BETA][Rondas])
+	{
+		EquipoGana = EQUIPO_ALPHA;
+		EquipoPierde = EQUIPO_BETA;
+	}
+	else
+	{
+		EquipoGana = EQUIPO_BETA;
+		EquipoPierde = EQUIPO_ALPHA;
+	}
+
+	if (Mundo[TipoPartida] == POR_EQUIPO) // Si la partida es CW
+	{
+		new msj[350];
+		format(msj, sizeof(msj), "{FFFFFF}[CW] El equipo {%06x}%s {FFFFFF}ha ganado la partida contra {%06x}%s", ObtenerColorEquipo(EquipoGana), Equipo[EquipoGana][Nombre], ObtenerColorEquipo(EquipoPierde), Equipo[EquipoPierde][Nombre]);
+		EnviarMensajeGlobal(msj);
+
+	} else if (Mundo[TipoPartida] == UNOVSUNO) { // Si la partida es 1vs1
+		new
+			JugadorGanador, JugadorPerdedor;
+
+		if (EquipoGana == EQUIPO_ALPHA)
+		{
+			JugadorGanador = ObtenerUnicoJugador(EQUIPO_ALPHA);
+			JugadorPerdedor = ObtenerUnicoJugador(EQUIPO_BETA);
+		} else {
+			JugadorGanador = ObtenerUnicoJugador(EQUIPO_BETA);
+			JugadorPerdedor = ObtenerUnicoJugador(EQUIPO_ALPHA);
+		}
+
+		new msj1v1[350];
+		format(msj, sizeof(msj), "{FFFFFF}[CW] {%06x}%s ha ganado el enfrentamiento a %{%06}%s", ObtenerColorJugador(JugadorGanador), Jugador[JugadorGanador][Nombre], ObtenerColorJugador(JugadorPerdedor), Jugador[JugadorGanador][Nombre]);
+		EnviarMensajeGlobal(msj1v1);
 }
