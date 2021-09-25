@@ -55,6 +55,9 @@
 #define POR_EQUIPO 1
 #define UNOVSUNO 2
 
+#define GANADOR 0
+#define PERDEDOR 0
+
 // Definición de colores.
 #define BLANCO -1
 #define NEUTRO 0xC0C9C9C9

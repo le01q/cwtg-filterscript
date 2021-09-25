@@ -43,3 +43,11 @@ CMD:data(playerid, params[]){
 	}
 	return 1;
 }
+
+CMD:a(playerid, params[]){
+	new Float:angulo, tmp[26];
+	GetPlayerFacingAngle(playerid, angulo);
+	format(tmp, sizeof(tmp), "Angulo: %0.2f", angulo);
+	SendClientMessage(playerid, BLANCO, tmp);
+	return 1;
+}

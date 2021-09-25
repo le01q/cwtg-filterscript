@@ -21,7 +21,6 @@
 #tryinclude "modulos/CW_Funciones.pwn"
 #tryinclude "modulos/CW_Comandos.pwn"
 
-
 // Verifica si se incluyen los modulos.
 #if !defined CW_CONFIGURACION || !defined CW_UTILIDADES || !defined CW_DECLARACIONES || !defined CW_FUNCIONES || !defined CW_COMANDOS
 	#error Error a cargar uno de los modulos.
@@ -93,14 +92,6 @@ public OnPlayerConnect(playerid)
 	return 1;
 }
 
-CMD:a(playerid, params[]){
-	new Float:angulo, tmp[26];
-	GetPlayerFacingAngle(playerid, angulo);
-	format(tmp, sizeof(tmp), "Angulo: %0.2f", angulo);
-	SendClientMessage(playerid, BLANCO, string);
-	return 1;
-}
-
 public OnPlayerDisconnect(playerid, reason)
 {
 	if(Jugador[playerid][Jugando])
@@ -116,14 +107,14 @@ public OnPlayerSpawn(playerid)
 	return 1;
 }
 
-public OnPlayerDeath(playerid)
+public OnPlayerDeath(playerid, killerid, reason)
 {
+	if(Mundo[EnJuego])
+		ActualizarEquipos(playerid, killerid);
+
 	if(Jugador[playerid][Jugando])	
 		CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 	
-	if (Mundo[EnJuego])
-		ActualizarEquipos(playerid, killerid);
-
 	return 1;
 }
 
