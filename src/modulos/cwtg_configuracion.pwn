@@ -1,16 +1,15 @@
-#if defined CW_CONFIGURACION
+#if defined CWTG_CONFIG
 	#endinput
 #endif
 
-// Definicion principal del archivo.
-#define CW_CONFIGURACION
+#define CWTG_CONFIG
 
 // Configuración por defecto (PD)
 #define PD_MAPA AEROPUERTO_LV
 #define PD_TIPO_ARMA ARMAS_RAPIDAS
 #define PD_NUMERO_MUNDO 7284
-#define PD_PUNTAJE_MAXIMO 15
-#define PD_RONDA_MAXIMA 3
+#define PD_PUNTAJE_MAXIMO 3
+#define PD_RONDA_MAXIMA 2
 
 #define PD_ALPHA_NOMBRE "Alpha"
 #define PD_BETA_NOMBRE "Beta"

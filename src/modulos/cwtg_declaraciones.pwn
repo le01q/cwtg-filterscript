@@ -1,9 +1,8 @@
-#if defined CW_DECLARACIONES
+#if defined CWTG_DECL
 	#endinput
 #endif
 
-// Definicion principal del archivo.
-#define CW_DECLARACIONES
+#define CWTG_DECL
 
 // Variables del jugador.
 enum DATOS_JUGADOR {

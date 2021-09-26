@@ -1,34 +1,38 @@
 /**
- * @file CW_Sistema.pwn
- * @brief Sistema Clan-War para servidores Freeroam.
+ * @file cwtg_sistema.pwn
+ * @brief Sistema CW/TG para cualquier gamemode de sa-mp.
  * 
  * @author leo1q (https://github.com/leo1q)
  * @author ne0de (https://github.com/ne0de)
  * 
- * @version 0.1
- * @date 2021-09-21
+ * @version 0.0.9
+ * @date 2021-09-26
  * 
- * @copyright Copyright (c) 2021 by ne0de and leo1q - All rights reserved.
- * 
+ * @copyright 2021 by ne0de and leo1q - All rights reserved.
+ * @license GNU General Public License v3.0
  */
 
 #include <a_samp>
 #include <zcmd>
 
-#tryinclude "modulos/CW_Configuracion.pwn"
-#tryinclude "modulos/CW_Declaraciones.pwn"
-#tryinclude "modulos/CW_Utilidades.pwn"
-#tryinclude "modulos/CW_Funciones.pwn"
-#tryinclude "modulos/CW_Comandos.pwn"
+#tryinclude "modulos/cwtg_configuracion.pwn"
+#tryinclude "modulos/cwtg_declaraciones.pwn"
+#tryinclude "modulos/cwtg_utilidades.pwn"
+#tryinclude "modulos/cwtg_funciones.pwn"
+#tryinclude "modulos/cwtg_comandos.pwn"
 
 // Verifica si se incluyen los modulos.
-#if !defined CW_CONFIGURACION || !defined CW_UTILIDADES || !defined CW_DECLARACIONES || !defined CW_FUNCIONES || !defined CW_COMANDOS
+#if !defined CWTG_CONFIG || \
+	!defined CWTG_UTILS || \
+	!defined CWTG_FUNCS || \
+	!defined CWTG_DECL || \
+	!defined CWTG_CMDS
 	#error Error a cargar uno de los modulos.
 #endif
 
 public OnFilterScriptInit()
 {
-	print("\n> Sistema Clan-War cargado correctamente.\n");
+	print("\n> Sistema CW/TG cargado correctamente.\n> Desarrolladores: ne0de y leoq1.");
 	return 1;
 }
 
@@ -40,7 +44,7 @@ public OnGameModeInit()
 	InicializarEquipos();
 
 	#if RP_ESTADO
-		print("> Sistema Clan-War: refresco de posicion activado.");
+		print("> Sistema CW/TG: refresco de posicion para espectadores activado.");
 		SetTimer("RefrescarPosicion", RP_TIEMPO, true);
 	#endif
 
@@ -123,17 +127,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     switch(dialogid)
     {
 		case D_MENU_EQUIPOS:
-		{
-			if(!response){
+			if(!response)
 			    return 1;
-			}else{
+			else{
 				switch(listitem){
 					case 0: return IntegrarEquipo(playerid, EQUIPO_ALPHA);
 					case 1: return IntegrarEquipo(playerid, EQUIPO_BETA);
 					case 2: return IntegrarEquipo(playerid, EQUIPO_ESPECTADOR);
 				}
 			}
-		}
 	}
 	return 1;
 }

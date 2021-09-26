@@ -1,9 +1,8 @@
-#if defined CW_UTILIDADES
+#if defined CWTG_UTILS
 	#endinput
 #endif
 
-// Definicion principal del archivo.
-#define CW_UTILIDADES
+#define CWTG_UTILS
 
 // For macreado
 #define Iterar(%0,%1) \

@@ -1,10 +1,10 @@
 
-#if defined CW_COMANDOS
+#if defined CWTG_CMDS
 	#endinput
 #endif
 
 // Definicion principal del archivo.
-#define CW_COMANDOS
+#define CWTG_CMDS
 
 CMD:equipo(playerid, params[])
 {
@@ -28,6 +28,18 @@ CMD:cwsalir(playerid, params[])
 		return EnviarAdvertencia(playerid, "[CW] No estas en el mundo para salirte.");
 
 	return QuitarJugador(playerid);
+}
+
+CMD:toggle(playerid, params[])
+{
+	if(Mundo[EnJuego]){
+		Mundo[EnJuego] = false;
+		EnviarMensajeGlobal("Juego desactivado.");
+	}else{
+		Mundo[EnJuego] = true;
+		EnviarMensajeGlobal("Juego activado.");
+	}
+	return 1;
 }
 
 CMD:data(playerid, params[]){

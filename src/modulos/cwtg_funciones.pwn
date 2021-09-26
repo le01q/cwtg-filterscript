@@ -1,9 +1,8 @@
-#if defined CW_FUNCIONES
+#if defined CWTG_FUNCS
 	#endinput
 #endif
 
-// Definicion principal del archivo.
-#define CW_FUNCIONES
+#define CWTG_FUNCS
 
 InicializarJugador(playerid)
 {
@@ -129,9 +128,6 @@ QuitarJugador(playerid)
 	CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 	SetPlayerColor(playerid, BLANCO);
 	return EnviarMensajeGlobal(mensaje);
-
-	if (Mundo[CantidadJugadores] < 0)
-		Mundo[CantidadJugadores] = 0;
 }
 
 IntegrarEquipo(playerid, equipo)
