@@ -4,7 +4,7 @@ Modo de juego  `Clan-War/Training` programado en forma de filterscript para ser 
 
 ## Instalación
 
-1. Descarga `cwtg_sistema.zip` desde [actualizaciones]().
+1. Descarga `cwtg_sistema.zip` de la última versión desde [actualizaciones](https://github.com/leo1q/cwtg-filterscript/releases).
 2. Extrae o copia todos los archivos en `<tu_server>/filterscripts/`.
 3. Agrega `cwtg_sistema` en la linea `filterscripts` de tu archivo server.cfg.
 
