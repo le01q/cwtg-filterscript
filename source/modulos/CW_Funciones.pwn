@@ -129,6 +129,9 @@ QuitarJugador(playerid)
 	CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
 	SetPlayerColor(playerid, BLANCO);
 	return EnviarMensajeGlobal(mensaje);
+
+	if (Mundo[CantidadJugadores] < 0)
+		Mundo[CantidadJugadores] = 0;
 }
 
 IntegrarEquipo(playerid, equipo)
