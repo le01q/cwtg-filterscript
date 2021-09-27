@@ -1,12 +1,12 @@
-/**
+	/**
  * @file cwtg_sistema.pwn
  * @brief Sistema CW/TG para cualquier gamemode de sa-mp.
  * 
  * @author leo1q (https://github.com/leo1q)
  * @author ne0de (https://github.com/ne0de)
  * 
- * @version 0.0.9
- * @date 2021-09-26
+ * @version 0.1.3
+ * @date 2021-09-27
  * 
  * @copyright 2021 by ne0de and leo1q - All rights reserved.
  * @license GNU General Public License v3.0
@@ -122,13 +122,25 @@ public OnPlayerDeath(playerid, killerid, reason)
 	return 1;
 }
 
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
+{
+	if(Mundo[EnJuego])
+		ActualizarDamage(playerid, issuerid, amount);
+	return 1;
+}
+
+public OnPlayerCommandReceived(playerid, cmdtext[])
+{
+	return 1;
+}
+
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
     switch(dialogid)
     {
 		case D_MENU_EQUIPOS:
 			if(!response)
-			    return 1;
+			    return MostrarMenuEquipos(playerid);
 			else{
 				switch(listitem){
 					case 0: return IntegrarEquipo(playerid, EQUIPO_ALPHA);
@@ -136,6 +148,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 2: return IntegrarEquipo(playerid, EQUIPO_ESPECTADOR);
 				}
 			}
+		
+		case D_MENU_CONFIGURACION:
+			if(response)
+				switch(listitem)
+				{
+					case 11: return MostrarConfiguracionEquipo(playerid, EQUIPO_ALPHA); 
+					case 12: return MostrarConfiguracionEquipo(playerid, EQUIPO_BETA); 
+				}
+		
+		case D_CONFIGURACION_EQUIPO:
+			if(!response)
+				return MostrarMenuConfiguracion(playerid);
+
 	}
 	return 1;
 }

@@ -10,7 +10,7 @@ enum DATOS_JUGADOR {
 	EquipoElegido,
 	Asesinatos,
 	Muertes,
-	Float:Promedio
+	Damage
 };
 new Jugador[MAX_PLAYERS][DATOS_JUGADOR];
 
@@ -22,7 +22,6 @@ enum DATOS_EQUIPO
 	Puntaje,
 	Rondas,
 	PuntajeTotal,
-	RondasTotal,
 	Color,
 	Skin,
 };
@@ -33,6 +32,7 @@ enum DATOS_MUNDO {
 	bool:EnJuego,
 	bool:EnPausa,
 	bool:EquiposBloqueados,
+	bool:InicioAutomatico,
 	bool:SkinObligatorio,
 	CantidadJugadores,
 	TipoPartida,
@@ -45,7 +45,13 @@ enum DATOS_MUNDO {
 };
 new Mundo[DATOS_MUNDO];
 
+new const NombreMapa[][] = {"Aeropuerto LV", "Aeropuerto SF", "Aeropuerto LV"};
+new const TipoPartidaNombre[][] = {"Entrenamiento", "Por equipo", "Uno vs Uno"};
+
+
 new const Armas[3] = {22, 26, 28};
+new const NombreArma[][] = {"Armas Rapidas", "Solo recortada"};
+
 
 // Posiciones de cada mapa.
 new const Float:posicionMapa[3][3][4] =

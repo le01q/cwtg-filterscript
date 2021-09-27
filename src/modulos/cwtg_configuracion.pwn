@@ -64,7 +64,10 @@
 #define AZUL 0x3624FFFF
 #define CYAN 0x88F7F7FF
 #define ROJO 0xFF5353FF
+#define VERDE 0x007C0EFF
 #define AMARILLO 0xFFFFBB00
 
 // Definición de dialogos
 #define D_MENU_EQUIPOS 6456
+#define D_MENU_CONFIGURACION 6457
+#define D_CONFIGURACION_EQUIPO 6458

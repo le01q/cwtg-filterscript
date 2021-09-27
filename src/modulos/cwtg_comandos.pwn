@@ -9,36 +9,45 @@
 CMD:equipo(playerid, params[])
 {
 	if(!Jugador[playerid][Jugando])
-		return EnviarAdvertencia(playerid, "[CW] No estas en el mundo.");
+		return EnviarAdvertencia(playerid, "[CW/TG] No estas en el mundo.");
 	
 	return MostrarMenuEquipos(playerid);
 }
 
-CMD:cw(playerid, params[])
+CMD:cwtg(playerid, params[])
 {
 	if(Jugador[playerid][Jugando])
-		return EnviarAdvertencia(playerid, "[CW] Ya estas actualmente en el mundo.");
+		return EnviarAdvertencia(playerid, "[CW/TG] Ya estas actualmente en el mundo.");
 	
 	return UnirJugador(playerid);
 }
 
-CMD:cwsalir(playerid, params[])
+CMD:cwtgsalir(playerid, params[])
 {
 	if(!Jugador[playerid][Jugando])
-		return EnviarAdvertencia(playerid, "[CW] No estas en el mundo para salirte.");
+		return EnviarAdvertencia(playerid, "[CW/TG] No estas en el mundo para salirte.");
 
 	return QuitarJugador(playerid);
 }
 
-CMD:toggle(playerid, params[])
+CMD:configuracion(playerid, params[])
 {
-	if(Mundo[EnJuego]){
-		Mundo[EnJuego] = false;
-		EnviarMensajeGlobal("Juego desactivado.");
-	}else{
-		Mundo[EnJuego] = true;
-		EnviarMensajeGlobal("Juego activado.");
+	return MostrarMenuConfiguracion(playerid);
+}
+
+CMD:jugadores(playerid, params[]){
+	new tmp[1000];
+	IterarJugadoresEnPartida(i)
+	{
+		format(tmp, sizeof(tmp), "Jugador:%d, Nombre:%s, Asesinatos:%d, Muertes:%d, Damage:%d", i, ObtenerNombreJugador(i), Jugador[i][Asesinatos], Jugador[i][Muertes], Jugador[i][Damage]);
+		SendClientMessageToAll(BLANCO, tmp);
 	}
+	return 1;
+}
+
+CMD:configurar(playerid, params[]){
+	if(!IsPlayerAdmin(playerid))
+		return EnviarAdvertencia(playerid, "> Solo los admins pueden configurar.");
 	return 1;
 }
 
@@ -49,8 +58,8 @@ CMD:data(playerid, params[]){
 	SendClientMessageToAll(BLANCO, tmp);
 
 	IterarEquipos(i){
-		format(tmp, sizeof(tmp), "Nombre:%s, Jugadores:%d, Puntaje:%d, Rondas:%d, Puntajet:%d, Rondast:%d",
-		Equipo[i][Nombre], Equipo[i][CantidadJugadores], Equipo[i][Puntaje], Equipo[i][Rondas], Equipo[i][PuntajeTotal], Equipo[i][RondasTotal]);
+		format(tmp, sizeof(tmp), "Nombre:%s, Jugadores:%d, Puntaje:%d, Rondas:%d, Puntajetotal:%d",
+		Equipo[i][Nombre], Equipo[i][CantidadJugadores], Equipo[i][Puntaje], Equipo[i][Rondas], Equipo[i][PuntajeTotal]);
 		SendClientMessageToAll(BLANCO, tmp);
 	}
 	return 1;
