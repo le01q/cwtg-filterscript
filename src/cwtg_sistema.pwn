@@ -161,6 +161,27 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(!response)
 				return MostrarMenuConfiguracion(playerid);
 
+		case D_CONFIGURAR_VARIABLE:
+			if(!response)
+				return MostrarMenuConfiguracion(playerid);
+
+			switch(listitem)
+			{
+				case 0: return MostrarConfigurarVariables(playerid, "Establece el numero del mapa al que vas a cambiar:", D_CAMBIAR_MAPA);
+				case 1: return MostrarConfigurarVariables(playerid, "Establece el tipo de arma actual de la partida:", D_CAMBIAR_ARMA);
+				case 2: return MostrarConfigurarVariables(playerid, "Establece el tipo de partida actual:", D_CAMBIAR_PARTIDA);
+				case 3: return MostrarConfigurarVariables(playerid, "Establece la ronda máxima de esta partida", D_CAMBIAR_RONDAMAX);
+				case 4: return MostrarConfigurarVariables(playerid, "Establece la ronda actual de la partida", D_CAMBIAR_RONDACTUAL);
+				case 5: return MostrarConfigurarVariables(playerid, "Establece el puntaje máximo de esta partida", D_CAMBIAR_PTJEMAX);
+				case 6: return MostrarConfigurarVariables(playerid, "Cambiar si la partida está en juego o no", D_CAMBIAR_ENJUEGO);
+				case 7: return MostrarConfigurarVariables(playerid, "Definir si está en pausa el juego o no", D_CAMBIAR_ENPAUSA);
+				case 8: return MostrarConfigurarVariables(playerid, "Establece el inicio automatico", D_CAMBIAR_INICIOAUTO);
+				case 9: return MostrarConfigurarVariables(playerid, "Establece las entradas a los equipos", D_CAMBIAR_EQUIPOS_BLOQUEADOS);
+				case 10: return MostrarConfigurarVariables(playerid, "Establece si hay skin obligatorio o no", D_CAMBIAR_SKINOBLIGATORIO);
+				case 11: return MostrarConfigurarVariables(playerid, "Establece el color de este equipo", D_CAMBIAR_COLOR_ALPHA);
+				case 12: return MostrarConfigurarVariables(playerid, "Establece el color de este equipo", D_CAMBIAR_COLOR_BETA);
+			}
+		
 	}
 	return 1;
 }
