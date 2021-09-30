@@ -196,6 +196,13 @@ MostrarConfiguracionEquipo(playerid, equipo)
 	return ShowPlayerDialog(playerid, D_CONFIGURACION_EQUIPO, DIALOG_STYLE_TABLIST_HEADERS, Titulo, Dialogo, ">>", "Volver");
 }
 
+//Funcion dentro del menu de configuracion de equipos.
+
+MostrarConfigurarVariables(playerid, descripcion, maximo)
+{
+	return ShowPlayerDialog(playerid, D_CONFIGURAR_VARIABLE, DIALOG_STYLE_INPUT, "Configuracion de parámetros", descripcion, ">>", "X");
+}
+
 /*
 
 Funciones que serviran mas adelante.
