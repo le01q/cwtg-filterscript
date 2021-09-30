@@ -53,8 +53,8 @@ CMD:configurar(playerid, params[]){
 
 CMD:data(playerid, params[]){
 	new tmp[1000];
-	format(tmp, sizeof(tmp), "Jugadores%d, En juego:%d, En pausa:%d, Tipopartida:%d, PuntajeMaximo:%d, RondaMaxima:%d, RondaActual:%d, Numero:%d, Mapa:%d",
-	Mundo[CantidadJugadores], Mundo[EnJuego], Mundo[EnPausa], Mundo[TipoPartida], Mundo[PuntajeMaximo], Mundo[RondaMaxima], Mundo[RondaActual], Mundo[Numero], Mundo[Mapa]);
+	format(tmp, sizeof(tmp), "Jugadores%d, En juego:%d, En pausa:%d, Tipopartida:%d, Tipoarma: %d, PuntajeMaximo:%d, RondaMaxima:%d, RondaActual:%d, Numero:%d, Mapa:%d",
+	Mundo[CantidadJugadores], Mundo[EnJuego], Mundo[EnPausa], Mundo[TipoPartida], Mundo[TipoArma], Mundo[PuntajeMaximo], Mundo[RondaMaxima], Mundo[RondaActual], Mundo[Numero], Mundo[Mapa]);
 	SendClientMessageToAll(BLANCO, tmp);
 
 	IterarEquipos(i){

@@ -8,6 +8,7 @@ InicializarJugador(playerid)
 {
 	Jugador[playerid][EquipoElegido] = NULO;
 	Jugador[playerid][Jugando] = false;
+	Jugador[playerid][DialogoActual] = -1;
 	ResetearJugador(playerid);
 }
 
@@ -48,6 +49,14 @@ InicializarMundo()
 	Mundo[Numero] = PD_NUMERO_MUNDO;
 }
 
+EsUnNumero(const texto[])
+{
+	for (new i = 0, j = strlen(texto); i < j; i++)
+		if (texto[i] > '9' || texto[i] < '0')
+			return 0;
+	return 1;
+}
+
 ObtenerColorEquipo(numero)
 {
 	return (Equipo[numero][Color] >>> 8) & 0xFFFFFF;
@@ -67,9 +76,7 @@ ObtenerNombreJugador(playerid)
 
 ObtenerUnicoJugador(equipo)
 {
-	IterarJugadores(id) 
-		if (Jugador[id][EquipoElegido] == equipo) 
-			return id;
+	IterarJugadores(id) if (Jugador[id][EquipoElegido] == equipo) return id;
 	return 0;
 }
 
@@ -77,7 +84,6 @@ ObtenerEquipoContrario(equipo)
 {
 	return equipo == EQUIPO_ALPHA ? EQUIPO_BETA : EQUIPO_ALPHA;
 }
-
 
 MostrarMenuEquipos(playerid)
 {
@@ -121,7 +127,7 @@ QuitarJugador(playerid)
 {
 	new mensaje[MAX_LONGITUD_MENSAJE];
 	Mundo[CantidadJugadores]--;
-	if(Mundo[CantidadJugadores] < 0)
+	if (Mundo[CantidadJugadores] < 0)
 		Mundo[CantidadJugadores] = 0;
 	format(mensaje, sizeof(mensaje), "[CW] El jugador {%06x}%s {FFFFFF}se salió del mundo (%d jugadores)", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid), Mundo[CantidadJugadores]);
 	Jugador[playerid][Jugando] = false;
@@ -131,16 +137,69 @@ QuitarJugador(playerid)
 	return EnviarMensajeGlobal(mensaje);
 }
 
+ObtenerParametro(numero)
+{
+	switch (numero)
+	{
+	case 0:
+		return Mundo[Mapa];
+	case 1:
+		return Mundo[TipoArma];
+	case 2:
+		return Mundo[TipoPartida];
+	case 3:
+		return Mundo[RondaMaxima];
+	case 4:
+		return Mundo[RondaActual];
+	case 5:
+		return Mundo[PuntajeMaximo];
+	}
+	return 0;
+}
+
+CambiarParametro(playerid, numeroParametro, nuevoValor)
+{
+	//NombreMapa[Mundo[Mapa]], NombreArma[Mundo[TipoArma]], TipoPartidaNombre[Mundo[TipoPartida]]
+	new tmp[MAX_LONGITUD_MENSAJE];
+
+	if (ObtenerParametro(numeroParametro) == nuevoValor)
+		return EnviarAdvertencia(playerid, "> No pongas el mismo valor.");
+
+	format(tmp, sizeof(tmp), "{%06x}%s{FFFFFF} ", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid));
+	strcat(tmp, MensajeParametroPartida[numeroParametro][1]);
+
+	switch (numeroParametro)
+	{
+	case 0:
+	{
+		Mundo[Mapa] = nuevoValor;
+		ReiniciarPosicionJugadores(false);
+	}
+	case 1:
+		Mundo[TipoArma] = nuevoValor;
+	case 2:
+		Mundo[TipoPartida] = nuevoValor;
+	case 3:
+		Mundo[RondaMaxima] = nuevoValor;
+	case 4:
+		Mundo[RondaActual] = nuevoValor;
+	case 5:
+		Mundo[PuntajeMaximo] = nuevoValor;
+	}
+
+	return EnviarMensajeGlobal(tmp);
+}
+
 IntegrarEquipo(playerid, equipo)
 {
 	new equipoActual = Jugador[playerid][EquipoElegido];
 
 	if (equipoActual == equipo)
 		return 1;
-	
+
 	if (equipoActual != NULO)
 		AbandonarEquipo(playerid, equipoActual);
-		
+
 	new tmp[MAX_LONGITUD_MENSAJE];
 	format(tmp, sizeof(tmp), "[CW] {%06x}%s {FFFFFF}se integro al equipo {%06x}%s", ObtenerColorJugador(playerid), ObtenerNombreJugador(playerid), ObtenerColorEquipo(equipo), Equipo[equipo][Nombre]);
 
@@ -156,7 +215,7 @@ IntegrarEquipo(playerid, equipo)
 ConvertirATexto(valor)
 {
 	new tmp[16];
-	if(valor)
+	if (valor)
 		format(tmp, sizeof(tmp), "{%06x}Si", VERDE >>> 8 & 0xFFFFFF);
 	else
 		format(tmp, sizeof(tmp), "{%06x}No", ROJO >>> 8 & 0xFFFFFF);
@@ -171,13 +230,13 @@ MostrarMenuConfiguracion(playerid)
 	strcat(Dialogo, tmp);
 	format(tmp, sizeof(tmp), "\nRonda maxima\t%d\nRonda actual\t%d\nPuntaje maximo\t%d", Mundo[RondaMaxima], Mundo[RondaActual], Mundo[PuntajeMaximo]);
 	strcat(Dialogo, tmp);
+	format(tmp, sizeof(tmp), "\nModificar equipo {%06x}%s{FFFFFF}", ObtenerColorEquipo(EQUIPO_ALPHA), Equipo[EQUIPO_ALPHA][Nombre]);
+	strcat(Dialogo, tmp);
+	format(tmp, sizeof(tmp), "\nModificar equipo {%06x}%s", ObtenerColorEquipo(EQUIPO_BETA), Equipo[EQUIPO_BETA][Nombre]);
+	strcat(Dialogo, tmp);
 	format(tmp, sizeof(tmp), "\nEn juego\t%s\nEn pausa\t%s\nInicio automatico\t%s", ConvertirATexto(Mundo[EnJuego]), ConvertirATexto(Mundo[EnPausa]), ConvertirATexto(Mundo[InicioAutomatico]));
 	strcat(Dialogo, tmp);
 	format(tmp, sizeof(tmp), "\nEquipos bloqueados\t%s\nSkin obligatorio\t%s", ConvertirATexto(Mundo[EquiposBloqueados]), ConvertirATexto(Mundo[SkinObligatorio]));
-	strcat(Dialogo, tmp);
-	format(tmp, sizeof(tmp), "\nModificar {%06x}%s{FFFFFF}", ObtenerColorEquipo(EQUIPO_ALPHA), Equipo[EQUIPO_ALPHA][Nombre]);
-	strcat(Dialogo, tmp);
-	format(tmp, sizeof(tmp), "\nModificar {%06x}%s", ObtenerColorEquipo(EQUIPO_BETA),  Equipo[EQUIPO_BETA][Nombre]);
 	strcat(Dialogo, tmp);
 	return ShowPlayerDialog(playerid, D_MENU_CONFIGURACION, DIALOG_STYLE_TABLIST_HEADERS, "Configuracion", Dialogo, ">>", "X");
 }
@@ -198,9 +257,9 @@ MostrarConfiguracionEquipo(playerid, equipo)
 
 //Funcion dentro del menu de configuracion de equipos.
 
-MostrarConfigurarVariables(playerid, descripcion, maximo)
+MostrarConfiguracionParametro(playerid, titulo[], descripcion[], dialogoid)
 {
-	return ShowPlayerDialog(playerid, D_CONFIGURAR_VARIABLE, DIALOG_STYLE_INPUT, "Configuracion de parámetros", descripcion, ">>", "X");
+	return ShowPlayerDialog(playerid, dialogoid, DIALOG_STYLE_INPUT, titulo, descripcion, "Cambiar", "Volver");
 }
 
 /*
@@ -270,9 +329,9 @@ AbandonarEquipo(playerid, equipo)
 	Jugador[playerid][EquipoElegido] = NULO;
 }
 
-ReiniciarPosicionJugadores()
-{	
-	IterarJugadores(id) if(Jugador[id][EquipoElegido] != EQUIPO_ESPECTADOR)
+ReiniciarPosicionJugadores(enPartida)
+{
+	IterarJugadores(id) if (enPartida ? Jugador[id][EquipoElegido] != EQUIPO_ESPECTADOR : true)
 		CallLocalFunction("ActualizarPosicionJugador", "i", id);
 }
 
@@ -303,8 +362,8 @@ ObtenerPosicionCamara(equipo, Float:array[])
 ActualizarEquipos(playerid, killerid)
 {
 	new EquipoAsesino = Jugador[killerid][EquipoElegido], EquipoVictima = Jugador[playerid][EquipoElegido];
-	
-	if(EquipoAsesino == EquipoVictima)
+
+	if (EquipoAsesino == EquipoVictima)
 	{
 		SumarPuntaje(ObtenerEquipoContrario(EquipoAsesino));
 		Jugador[playerid][Muertes]++;
@@ -364,14 +423,13 @@ AnunciarMejorJugador(equipo)
 	new MejorJugador = ObtenerUnicoJugador(equipo);
 	new tmp = Jugador[MejorJugador][Damage];
 
-	IterarJugadoresEnPartida(id) if(Jugador[id][EquipoElegido] == equipo)
-		if(Jugador[id][Damage] > tmp)
-		{
-			// Establece el nuevo mejor jugador.
-			tmp = Jugador[id][Damage];
-			MejorJugador = id;
-		}
-	
+	IterarJugadoresEnPartida(id) if (Jugador[id][EquipoElegido] == equipo) if (Jugador[id][Damage] > tmp)
+	{
+		// Establece el nuevo mejor jugador.
+		tmp = Jugador[id][Damage];
+		MejorJugador = id;
+	}
+
 	new mensaje[MAX_LONGITUD_MENSAJE];
 	format(mensaje, sizeof(mensaje), "[CW] El mejor jugador ha sido {%06x}%s con %d dmg.", ObtenerColorJugador(MejorJugador), ObtenerNombreJugador(MejorJugador), tmp);
 	EnviarMensajeGlobal(mensaje);
@@ -386,9 +444,9 @@ AnunciarDamageJugadores(ganador, perdedor)
 AnunciarGanador(equipoGanador, epigrafe[])
 {
 	new tmp[MAX_LONGITUD_MENSAJE], modo[8], nombreGanador[MAX_NOMBRE_EQUIPO], nombrePerdedor[MAX_NOMBRE_EQUIPO], ganador, perdedor;
-	
+
 	// Se establecen las variables para el ganador y perdedor dependiendo del modo de juego.
-	if(Mundo[TipoPartida] == POR_EQUIPO)
+	if (Mundo[TipoPartida] == POR_EQUIPO)
 	{
 		ganador = equipoGanador;
 		perdedor = ObtenerEquipoContrario(equipoGanador);
@@ -407,7 +465,8 @@ AnunciarGanador(equipoGanador, epigrafe[])
 		AnunciarDamageJugadores(ganador, perdedor);
 	}
 
-	if(Equipo[equipoGanador][Rondas] == Mundo[RondaMaxima]){
+	if (Equipo[equipoGanador][Rondas] == Mundo[RondaMaxima])
+	{
 		ResetearEquipos();
 		IterarJugadoresEnPartida(id)
 			ResetearJugador(id);
@@ -415,7 +474,7 @@ AnunciarGanador(equipoGanador, epigrafe[])
 
 	format(tmp, sizeof(tmp), "[%s] {%06x}%s {FFFFFF}ha ganado la %s contra {%06x}%s", modo, ObtenerColorEquipo(equipoGanador), nombreGanador, epigrafe, ObtenerColorEquipo(ObtenerEquipoContrario(equipoGanador)), nombrePerdedor);
 	EnviarMensajeGlobal(tmp);
-	ReiniciarPosicionJugadores();
+	ReiniciarPosicionJugadores(true);
 	return 1;
 }
 
@@ -424,17 +483,17 @@ ActualizarDamage(victima, culpable, Float:cantidad)
 	new EquipoVictima = Jugador[victima][EquipoElegido], EquipoCulpable = Jugador[culpable][EquipoElegido];
 
 	// Si alguno es del equipo espectador, no se tendrá en cuenta.
-	if(EquipoVictima == EQUIPO_ESPECTADOR || EquipoCulpable == EQUIPO_ESPECTADOR)
+	if (EquipoVictima == EQUIPO_ESPECTADOR || EquipoCulpable == EQUIPO_ESPECTADOR)
 		return 1;
 
 	// Si son equipos iguales se le restará al culpable.
-	if(EquipoVictima == EquipoCulpable)
+	if (EquipoVictima == EquipoCulpable)
 	{
 		Jugador[culpable][Damage] -= floatround(cantidad, floatround_ceil);
 		EnviarAdvertencia(culpable, "> Has disparado a un compañero.");
 	}
 	else
 		Jugador[culpable][Damage] += floatround(cantidad, floatround_ceil);
-	
+
 	return 1;
 }
