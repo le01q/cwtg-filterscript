@@ -14,7 +14,7 @@ CMD:equipo(playerid, params[])
 	return MostrarMenuEquipos(playerid);
 }
 
-CMD:cwtg(playerid, params[])
+CMD:cwtg(playerid, params[6])
 {
 	if(Jugador[playerid][Jugando])
 		return EnviarAdvertencia(playerid, "[CW/TG] Ya estas actualmente en el mundo.");

@@ -262,6 +262,38 @@ MostrarConfiguracionParametro(playerid, titulo[], descripcion[], dialogoid)
 	return ShowPlayerDialog(playerid, dialogoid, DIALOG_STYLE_INPUT, titulo, descripcion, "Cambiar", "Volver");
 }
 
+// Parametros booleanos
+
+VerificarPartidaEnPausa()
+{
+	Mundo[EnPausa] = !Mundo[EnPausa];
+	return 1;
+}
+
+VerificarEnPartida()
+{
+	Mundo[EnJuego] = !Mundo[EnJuego];
+	return 1;
+}
+
+VerificarInicioAutomatico()
+{
+	Mundo[InicioAutomatico] = !Mundo[InicioAutomatico];
+	return 1;
+}
+
+VerificarEquiposBloqueados()
+{
+	Mundo[EquiposBloqueados] = !Mundo[EquiposBloqueados];
+	return 1;
+}
+
+VerificarSkinObligatorio()
+{
+	Mundo[SkinObligatorio] =  !Mundo[SkinObligatorio];
+	return 1;
+}
+
 /*
 
 Funciones que serviran mas adelante.

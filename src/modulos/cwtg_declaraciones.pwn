@@ -60,11 +60,11 @@ new const EncabezadoParametro[12][2][] = {{"Cambiar el mapa actual", "Escribe el
 										  {"Cambiar ronda actual", "Escribe la ronda actual"},
 										  {"Cambiar puntaje maximo", "Escribe el puntaje maximo"},
 										  // booleanos..
-										  {"", ""},
-										  {"", ""},
-										  {"", ""},
-										  {"", ""},
-										  {"", ""},
+										  {"Partida en juego", "Desactivado por defecto"},
+										  {"En pausa", "Desactivado por defecto"},
+										  {"Inicio automatico", "Desactivado por defecto"},
+										  {"Equipos bloqueados", "Desactivado por defecto"},
+										  {"Skin obligatorio", "Activado por defecto"},
 										  {"Cambiar color equipo", "Escribe el color (hex) para el equipo"}};
 
 // Identificador para máximos de cada parámetro de la partida.
