@@ -161,7 +161,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						case 7:
 							return MostrarConfiguracionEquipo(playerid, EQUIPO_BETA);
 						case 8:
-							return 1;
+							return CambiarEnPartida(playerid);
+						case 9:
+							return CambiarPartidaEnPausa(playerid);
+						case 10:
+							return CambiarInicioAutomatico(playerid);
+						case 11: 
+							return CambiarEquiposBloqueados(playerid);
+						case 12:
+							return CambiarSkinObligatorio(playerid);
 					}
 				}
 		

@@ -264,34 +264,34 @@ MostrarConfiguracionParametro(playerid, titulo[], descripcion[], dialogoid)
 
 // Parametros booleanos
 
-VerificarPartidaEnPausa()
+CambiarPartidaEnPausa(playerid)
 {
-	Mundo[EnPausa] = !Mundo[EnPausa];
-	return 1;
+	Mundo[EnPausa] = Mundo[EnPausa] ? false : true;
+	return MostrarMenuConfiguracion(playerid);
 }
 
-VerificarEnPartida()
+CambiarEnPartida(playerid)
 {
-	Mundo[EnJuego] = !Mundo[EnJuego];
-	return 1;
+	Mundo[EnJuego] = Mundo[EnJuego] ? false : true;
+	return MostrarMenuConfiguracion(playerid);
 }
 
-VerificarInicioAutomatico()
+CambiarInicioAutomatico(playerid)
 {
-	Mundo[InicioAutomatico] = !Mundo[InicioAutomatico];
-	return 1;
+	Mundo[InicioAutomatico] = Mundo[InicioAutomatico] ? false : true;
+	return MostrarMenuConfiguracion(playerid);
 }
 
-VerificarEquiposBloqueados()
+CambiarEquiposBloqueados(playerid)
 {
-	Mundo[EquiposBloqueados] = !Mundo[EquiposBloqueados];
-	return 1;
+	Mundo[EquiposBloqueados] = Mundo[EquiposBloqueados] ? false : true;
+	return MostrarMenuConfiguracion(playerid);
 }
 
-VerificarSkinObligatorio()
+CambiarSkinObligatorio(playerid)
 {
-	Mundo[SkinObligatorio] =  !Mundo[SkinObligatorio];
-	return 1;
+	Mundo[SkinObligatorio] =  Mundo[SkinObligatorio] ? false : true;
+	return MostrarMenuConfiguracion(playerid);
 }
 
 /*
