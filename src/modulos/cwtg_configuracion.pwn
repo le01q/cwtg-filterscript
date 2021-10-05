@@ -1,10 +1,24 @@
+/**
+ * @file cwtg_configuracion.pwn
+ * @author ne0de (https://github.com/ne0de)
+ * @brief Archivo que contiene la configuración del sistema, es modificable a tu gusto.
+ * @version 0.1.5
+ * @date 2021-10-04
+ * 
+ * @copyright Copyright (c) 2021 by ne0de.
+ * 
+ */
+
 #if defined CWTG_CONFIG
 	#endinput
 #endif
 
 #define CWTG_CONFIG
 
-// Configuración por defecto (PD)
+/**
+ * PD = Por Defecto
+ * Puedes modificar cada definición a tu gusto.
+ */
 #define PD_MAPA AEROPUERTO_LV
 #define PD_TIPO_ARMA ARMAS_RAPIDAS
 #define PD_NUMERO_MUNDO 7284
@@ -24,11 +38,16 @@
 #define PD_BETA_COLOR AZUL
 #define PD_ESPECTADOR_COLOR CYAN
 
+// Refrescar FPS de jugadores.
+#define RF_ESTADO true
+
 // Refrescar posición (RP) para espectadores.
 #define RP_ESTADO true
 #define RP_TIEMPO 2000	// medida en milisegundos.
 
-// Definición global.
+/**
+ * A partir de aquí ten cuidado con los valores que cambies.
+ */
 #define NULO -1
 #define MAX_EQUIPOS 3
 #define MAX_JUGADORES 6
@@ -78,10 +97,12 @@
 #define D_CONFIGURACION_EQUIPO 6458
 #define D_CONFIGURACION_PARAMETRO 6459
 
-// Definición dialogos de parametros 
+// Definición dialogos de parametros
 #define D_MAPA 7000
 #define D_ARMA 7001
 #define D_PARTIDA 7002
 #define D_RONDA_MAXIMA 7003
 #define D_RONDA_ACTUAL 7004
 #define D_PUNTAJE_MAXIMO 7005
+
+#define D_INFO_JUGADOR 8000

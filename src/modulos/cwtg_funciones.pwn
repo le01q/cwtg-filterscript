@@ -1,3 +1,14 @@
+/**
+ * @file cwtg_funciones.pwn
+ * @author ne0de (https://github.com/ne0de)
+ * @brief Archivo que contiene todas las funciones del sistema, cuidado al modificar.
+ * @version 0.1.5
+ * @date 2021-10-04
+ * 
+ * @copyright Copyright (c) 2021 by ne0de.
+ * 
+ */
+
 #if defined CWTG_FUNCS
 	#endinput
 #endif
@@ -83,6 +94,35 @@ ObtenerUnicoJugador(equipo)
 ObtenerEquipoContrario(equipo)
 {
 	return equipo == EQUIPO_ALPHA ? EQUIPO_BETA : EQUIPO_ALPHA;
+}
+
+#if RF_ESTADO
+ActualizarFps(playerid)
+{
+	new Nivel = GetPlayerDrunkLevel(playerid), Diferencia;
+	if (Nivel < 100)
+		SetPlayerDrunkLevel(playerid, 2000);
+	else if (Jugador[playerid][DeltaFps] != Nivel)
+	{
+		Diferencia = Jugador[playerid][DeltaFps] - Nivel;
+		Jugador[playerid][DeltaFps] = Nivel;
+		if(0 < Diferencia < 256)
+		{
+			Jugador[playerid][Fps] = Diferencia - 1;
+			return Diferencia - 1;
+		}
+	}
+	return 0;
+}
+#endif
+
+MostrarInfoJugador(playerid, id)
+{
+	new data[2048];
+	format(data, sizeof(data), "{FFFFFF}Nombre: {%06x}%s", ObtenerColorJugador(id), ObtenerNombreJugador(id));
+	format(data, sizeof(data), "%s\n{FFFFFF}Skin: %d", data, GetPlayerSkin(id));
+	format(data, sizeof(data), "%s\n{FFFFFF}Fps: %d", data, Jugador[id][Fps]);
+	return ShowPlayerDialog(playerid, D_INFO_JUGADOR, DIALOG_STYLE_MSGBOX, "Datos", data, "Ok", "");
 }
 
 MostrarMenuEquipos(playerid)

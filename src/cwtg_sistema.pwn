@@ -1,18 +1,19 @@
-	/**
+/**
  * @file cwtg_sistema.pwn
  * @brief Sistema CW/TG para cualquier gamemode de sa-mp.
  * 
  * @author leo1q (https://github.com/leo1q)
  * @author ne0de (https://github.com/ne0de)
  * 
- * @version 0.1.3
- * @date 2021-09-27
+ * @version 0.1.5
+ * @date 2021-10-04
  * 
  * @copyright 2021 by ne0de and leo1q - All rights reserved.
  * @license GNU General Public License v3.0
  */
 
 #include <a_samp>
+#include <strlib>
 #include <zcmd>
 
 #tryinclude "modulos/cwtg_configuracion.pwn"
@@ -46,6 +47,10 @@ public OnGameModeInit()
 	#if RP_ESTADO
 		print("> Sistema CW/TG: refresco de posicion para espectadores activado.");
 		SetTimer("RefrescarPosicion", RP_TIEMPO, true);
+	#endif
+
+	#if RF_ESTADO
+		print("> Sistema CW/TG: refresco de FPS para jugadores activado.");
 	#endif
 
 	return 1;
@@ -104,6 +109,14 @@ public OnPlayerDisconnect(playerid, reason)
 	return 1;
 }
 
+public OnPlayerUpdate(playerid)
+{
+	#if RF_ESTADO
+		ActualizarFps(playerid);
+	#endif
+	return 1;
+}
+
 public OnPlayerSpawn(playerid)
 {
 	if(Jugador[playerid][Jugando])	
@@ -131,6 +144,25 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 
 public OnPlayerCommandReceived(playerid, cmdtext[])
 {
+	// Macros para los comandos.
+	if(Jugador[playerid][Jugando])
+	{
+		if(!strcmp(cmdtext, "/salir")) 
+			return cmd_cwtgsalir(playerid, "");
+
+		if(!strcmp(cmdtext, "/configuracion"))
+			return cmd_cwtgconfig(playerid, "");
+		
+		if(!strcmp(cmdtext, "/equipo"))
+			return cmd_cwtgequipo(playerid, "");
+
+		if(strfind(cmdtext, "/i", true) != -1)
+		{
+			new params[2][24];
+			strexplode(params, cmdtext, " ");
+			return cmd_cwtgi(playerid, params[1]);
+		}
+	}
 	return 1;
 }
 

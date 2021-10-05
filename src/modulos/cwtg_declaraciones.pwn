@@ -1,10 +1,21 @@
+/**
+ * @file cwtg_declaraciones.pwn
+ * @author ne0de (https://github.com/ne0de)
+ * @brief Declaración de las variables que se usan en el sistema, no modificar.
+ * @version 0.1.5
+ * @date 2021-10-04
+ * 
+ * @copyright Copyright (c) 2021 by ne0de.
+ * 
+ */
+
 #if defined CWTG_DECL
 	#endinput
 #endif
 
 #define CWTG_DECL
 
-// Variables del jugador.
+// Enumeraciones del jugador.
 enum DATOS_JUGADOR {
 	bool:Jugando,
 	EquipoElegido,
@@ -12,10 +23,12 @@ enum DATOS_JUGADOR {
 	Asesinatos,
 	Muertes,
 	Damage,
+	Fps,
+	DeltaFps,
 };
 new Jugador[MAX_PLAYERS][DATOS_JUGADOR];
 
-// Variables del equipo.
+// Enumeraciones del equipo.
 enum DATOS_EQUIPO
 {
 	Nombre[MAX_NOMBRE_EQUIPO],
@@ -28,7 +41,7 @@ enum DATOS_EQUIPO
 };
 new Equipo[MAX_EQUIPOS][DATOS_EQUIPO];
 
-// Variables del mundo.
+// Enumeraciones del mundo.
 enum DATOS_MUNDO {
 	bool:EnJuego,
 	bool:EnPausa,
