@@ -5,7 +5,7 @@
  * @author leo1q (https://github.com/leo1q)
  * @author ne0de (https://github.com/ne0de)
  * 
- * @version 0.1.5
+ * @version 0.1.6
  * @date 2021-10-04
  * 
  * @copyright 2021 by ne0de and leo1q - All rights reserved.
@@ -33,7 +33,7 @@
 
 public OnFilterScriptInit()
 {
-	print("\n> Sistema CW/TG cargado correctamente.\n> Desarrolladores: ne0de y leoq1.");
+	print("\n> Sistema CW/TG cargado correctamente.\n> Desarrolladores: ne0de y leoq1.\nVersion: 0.1.6a");
 	return 1;
 }
 

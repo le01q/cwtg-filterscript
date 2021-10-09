@@ -3,7 +3,7 @@
  * @file cwtg_comandos.pwn
  * @author ne0de (https://github.com/ne0de)
  * @brief Archivo que contiene los comandos del sistema.
- * @version 0.1.5
+ * @version 0.1.6
  * @date 2021-10-04
  * 
  * @copyright Copyright (c) 2021 by ne0de.
