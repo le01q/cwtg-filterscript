@@ -19,7 +19,7 @@ InicializarJugador(playerid)
 {
 	Jugador[playerid][EquipoElegido] = NULO;
 	Jugador[playerid][Jugando] = false;
-	Jugador[playerid][DialogoActual] = -1;
+	Jugador[playerid][DActual] = -1;
 	ResetearJugador(playerid);
 }
 

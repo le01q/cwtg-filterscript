@@ -57,6 +57,9 @@
 #define MAX_RONDAS 6
 #define MAX_PUNTAJE 200
 
+// Tiempo de actualización de posición (Spawn)
+#define AP_TIEMPO 5000	// medida en milisegundos.
+
 // Definición de mapas.
 #define MAX_MAPAS 2
 #define AEROPUERTO_LV 0

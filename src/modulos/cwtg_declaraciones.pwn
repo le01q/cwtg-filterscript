@@ -19,7 +19,7 @@
 enum DATOS_JUGADOR {
 	bool:Jugando,
 	EquipoElegido,
-	DialogoActual,
+	DActual,
 	Asesinatos,
 	Muertes,
 	Damage,

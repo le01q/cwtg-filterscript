@@ -56,6 +56,12 @@ public OnGameModeInit()
 	return 1;
 }
 
+forward ActualizarJugador(playerid);
+public ActualizarJugador(playerid)
+{
+
+}
+
 #if RP_ESTADO
 forward RefrescarPosicion();
 public RefrescarPosicion()
@@ -129,8 +135,8 @@ public OnPlayerDeath(playerid, killerid, reason)
 	if(Mundo[EnJuego])
 		ActualizarEquipos(playerid, killerid);
 
-	if(Jugador[playerid][Jugando])	
-		CallLocalFunction("ActualizarPosicionJugador", "i", playerid);
+	if(Jugador[playerid][Jugando])
+		SetTimerEx("ActualizarPosicionJugador", AP_TIEMPO, false, "i", playerid);
 	
 	return 1;
 }
@@ -183,7 +189,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		
 		case D_MENU_CONFIGURACION:
 				if(response){
-					Jugador[playerid][DialogoActual] = listitem + 7000;
+					Jugador[playerid][DActual] = listitem + 7000;
 
 					switch(listitem){
 						case 0 .. 5:
@@ -212,11 +218,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case D_CONFIGURACION_PARAMETRO:
 		{
 			if(!response){
-				Jugador[playerid][DialogoActual] = -1;
+				Jugador[playerid][DActual] = -1;
 				return MostrarMenuConfiguracion(playerid);
 			}
 
-			new id = strval(inputtext), DialogoAcotado = Jugador[playerid][DialogoActual] - 7000;
+			new id = strval(inputtext), DialogoAcotado = Jugador[playerid][DActual] - 7000;
 			new maximo = DialogoAcotado == 4 ? Mundo[RondaMaxima] : MaximoParametroPartida[DialogoAcotado];
 			
 			if(!EsUnNumero(inputtext)){
@@ -229,7 +235,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				return MostrarMenuConfiguracion(playerid);
 			}
 
-			Jugador[playerid][DialogoActual] = -1;
+			Jugador[playerid][DActual] = -1;
 			return CambiarParametro(playerid, DialogoAcotado, id);
 		}
 
